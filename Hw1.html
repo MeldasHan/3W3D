@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html><head>
+<style>
+
+
+</style>
+</head>
+<body> 
+<h1> Hw1 </h1>
+<button id="power">Power</button>
+<button id="mode">Mode</button>
+
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+<div id="bkgd" style="position:absolute; top: 10vh; left: 10vw; width:60vw; height: 60vh;">
+     <img src="https://i.imgur.com/RCeiUn7.png">
+</div>
+<script>
+var powerOn = false;
+var modeOn = false;
+var mode = 0;
+
+$('#power').click (function() {
+  powerOn = !powerOn;
+  
+  if (powerOn === true && modeOn === false) 
+  {  // false--> true
+	 mode=1;
+	 lamps.forEach (function(item) {item.start();});
+  }
+  if (powerOn === false) 
+  {  // false--> true
+	 mode=0;
+
+  }
+});
+
+$('#mode').click (function() {
+  modeOn = !modeOn;
+  
+  if (powerOn === true && modeOn === true) 
+  {  // false--> true
+	 mode=2;
+  }
+  if (powerOn === true && modeOn === false) 
+  {  // false--> true
+	 mode=1;
+  }
+});
+
+class Lamp {
+
+  constructor(name) 
+  {
+    this.name = name + Lamp.id++;
+    this.myStatus = false;
+    
+    let el = document.createElement ('div');
+    el.id = this.name;
+	//let text = document.createTextNode(Name + 'is off');
+	//el.appendChild(text);
+    let bkgd = document.getElementById('bkgd');
+    bkgd.appendChild(el);
+    this.hue = Math.random()*360;
+
+    // styles
+    el.setAttribute ("style", `background-color: hsl(${this.hue}, 90%, 24%);width:35px;height:35px;border-radius:15px;z-index:1`);
+    this.left = Math.random();
+    this.top = Math.random()*2;
+	while(1)
+	{
+		if(this.left>=0.27&&this.left<=0.45)
+			break;
+		this.left = Math.random();
+	}
+	while(1)
+	{
+		if(this.top>=0.5&&this.top<=1.6)
+			break;
+		this.top = Math.random()*2;
+	}
+    el.style.position = "absolute";
+    el.style.left = this.left*100 + '%'; 
+    el.style.top = this.top*100 + '%';
+  }
+
+  toggle() 
+  { 
+    if (mode==1) 
+	{
+		console.log("mode 1");
+		setTimeout (()=>{this.toggle();}, 500);
+	   this.myStatus = !this.myStatus;
+	   if (this.myStatus === true) 
+		{
+			$('#'+this.name).css('backgroundColor', `hsl(${this.hue},90%,80%)`);
+      
+		} else 
+		{
+			$('#'+this.name).css('backgroundColor', `hsl(${this.hue},90%,24%)`);
+		}
+    }
+	else if (mode==2) 
+	{
+		console.log("mode 2");
+		this.myStatus = !this.myStatus;
+        setTimeout (()=>{ this.toggle(); }, Math.random()*1000+1000);
+	    if (this.myStatus === true) 
+		{
+			$('#'+this.name).css('backgroundColor', `hsl(${this.hue},90%,80%)`);
+      
+		} else 
+		{
+			$('#'+this.name).css('backgroundColor', `hsl(${this.hue},90%,24%)`);
+		}
+    }
+	else if (mode==0) 
+	{
+       this.close();
+    }
+  }
+  
+  update() 
+  {
+    setTimeout (()=>{ this.toggle(); }, Math.random()*1000+1000);
+  }
+  
+  close()
+  {
+	$('#'+this.name).css('backgroundColor', `hsl(${this.hue},90%,24%)`);
+  }
+  start()
+  {
+    setTimeout (()=>{this.toggle();}, 500);
+	$('#'+this.name).css('backgroundColor', `hsl(${this.hue},90%,80%)`);
+  }
+}
+
+
+Lamp.id = 0; // class variable
+lamps = [];
+
+for (let i = 0; i < 10; i++) {
+   let ll = new Lamp ('light');
+   lamps.push (ll);
+}
+
+
+</script>
+
+
+</body></html>
