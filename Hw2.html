@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<style>
+table
+{
+  border: 2px ridge black;
+  border-color: red;
+  background-color: #aeae9c;
+  border-radius: 20px;
+  text-align:center;
+}
+td,th
+{
+  font-size:30px;
+}
+input
+{
+	width:80%;
+	height:50%;
+}
+#outputf{
+  border: 1px; background-color:white; width:100%;
+}
+h1{
+	font-size:40px;
+	text-align:center;
+}
+</style>
+<body>
+<div style = "position : absolute; width: 1000px;height:1000px; background-color:#f1fa92">
+<h1>Vector Calculater</h1>
+<table style = "position : absolute; left:10%; top: 20%; width:30%; height:30%">
+  <tr>
+    <th colspan="3">V<hr style = "border-color:black; border-width: 3px;"></th>
+  </tr>
+  <tr>
+    <td>x</td>
+	<td><input type="number" id ="Vx"></input></td>
+  </tr>
+  <tr>
+    <td>y</td>
+	<td><input type="number" id ="Vy"></input></td>
+  </tr>
+  <tr>
+    <td>z</td>
+	<td><input type="number" id ="Vz"></input></td>
+  </tr>
+</table>
+
+<table style = "position : absolute; left:10%; top: 60%; width:30%; height:30%">
+  <tr>
+    <th colspan="3">W<hr style = "border-color:black; border-width: 2px;"></th>
+  </tr>
+  <tr>
+    <td>x</td>
+	<td><input type="number" id ="Wx"></input></td>
+  </tr>
+  <tr>
+    <td>y</td>
+	<td><input type="number" id ="Wy"></input></td>
+  </tr>
+  <tr>
+    <td>z</td>
+	<td><input type="number" id ="Wz"</input></td>
+  </tr>
+</table>
+
+<table style = "position : absolute; left:50%; top: 20%; width:30%; height:70%">
+  <tr>
+    <th colspan="3">inner product<hr style = "border-color:black; border-width: 2px;"></th>
+  </tr>
+  <tr>
+    <td>v.w</td>
+	<td id ="outputf"><h1 id="innerproduct"></h1></td>
+  </tr>
+  <tr>
+    <th colspan="3">v*w(vector product)<hr style = "border-color:black; border-width: 2px;"></th>
+  </tr>
+  <tr>
+    <td>x</td>
+	<td id ="outputf"><h1 id="VecX"></h1></td>
+  </tr>
+  <tr>
+    <td>y</td>
+	<td id ="outputf"><h1 id="VecY"></h1></td>
+  </tr>
+  <tr>
+    <td>z</td>
+	<td id ="outputf"><h1 id="VecZ"></h1></td>
+  </tr>
+</table>
+</div>
+<script src="https://threejs.org/build/three.min.js"></script>
+
+<script>
+
+
+animate();
+function animate() {
+
+	let VectorV = new THREE.Vector3();
+	VectorV.x = +document.getElementById("Vx").value;
+	VectorV.y = +document.getElementById("Vy").value;
+	VectorV.z = +document.getElementById("Vz").value;
+  
+	let VectorW = new THREE.Vector3();
+	VectorW.x = +document.getElementById("Wx").value;
+	VectorW.y = +document.getElementById("Wy").value;
+	VectorW.z = +document.getElementById("Wz").value;
+	
+	document.getElementById("innerproduct").innerHTML = VectorV.clone().dot(VectorW);
+	document.getElementById("VecX").innerHTML = VectorV.clone().cross(VectorW).x;
+	document.getElementById("VecY").innerHTML = VectorV.clone().cross(VectorW).y;
+	document.getElementById("VecZ").innerHTML = VectorV.clone().cross(VectorW).z;
+
+	requestAnimationFrame(animate);
+
+}	
+</script>
+</body>
+</html>
