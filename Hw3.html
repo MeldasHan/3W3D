@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html>
+<style>
+#info {
+  position: absolute;
+  top: 0px;
+  width: 100%;
+  padding: 0px;
+  text-align: center;
+  color: #ffff00
+}
+
+body {
+  overflow: hidden;
+  padding: 0px;
+  margin:0px;
+}
+</style>
+<body>
+<script src="https://threejs.org/build/three.min.js"></script>
+<script src="https://threejs.org/examples/js/controls/OrbitControls.js"></script>
+<script
+  src="https://code.jquery.com/jquery-3.6.0.min.js"
+  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+  crossorigin="anonymous"></script>
+<div id = "info">
+<button id = 'toggle1' >Switch ViewPoint</button>
+<button id = 'toggle2' >Turn Off</button>
+</div>
+<script>
+var camera, scene, renderer;
+var scale = 100;
+var lightSign=true;
+var index=0;
+var group = new THREE.Group();
+var temp=0;
+
+$("#toggle1").click(function()
+{
+	temp=0;
+	if(index < 3)
+		index++;
+	else
+		index = 0;
+})
+$("#toggle2").click(function()
+{
+	lightSign = !lightSign;
+	if(lightSign)
+	{
+		$("#toggle2").text("Turn Off");
+		group.children.forEach(function(b){b.power=5});
+	}
+	else
+	{
+		$("#toggle2").text("Turn On");
+		group.children.forEach(function(b){b.power=0});
+	}
+})
+
+init();
+animate();
+
+function init() 
+{
+  scene = new THREE.Scene();
+  
+  renderer = new THREE.WebGLRenderer();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setClearColor(0x888888);
+  document.body.appendChild(renderer.domElement);
+
+  camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 1, 10000);
+  camera.position.z = 750;
+  camera.position.y = 2000;
+  controls = new THREE.OrbitControls(camera, renderer.domElement);
+  buildWall()
+  painting()
+  buildFloor()
+  buildchair()
+  ceiling();
+}
+ 
+function ceiling()
+{
+	var ceiling = new THREE.Mesh(new THREE.BoxGeometry(scale * 10,scale * 0.1,scale * 0.1),new THREE.MeshPhongMaterial({color:'white'}));
+	ceiling.position.set(scale*6.5,scale * 5.5,0);
+	ceiling.rotation.set(0,Math.PI/2,0);
+	scene.add(ceiling);
+	
+	var ceiling2 = new THREE.Mesh(new THREE.BoxGeometry(scale * 10,scale * 0.1,scale * 0.1),new THREE.MeshPhongMaterial({color:'white'}));
+	ceiling2.position.set(-scale*6.5,scale * 5.5,0);
+	ceiling2.rotation.set(0,Math.PI/2,0);
+	scene.add(ceiling2);
+	
+	var ceiling3 = new THREE.Mesh(new THREE.BoxGeometry(scale * 13.1,scale * 0.1,scale * 0.1),new THREE.MeshPhongMaterial({color:'white'}));
+	ceiling3.position.set(0,scale * 5.5,scale * 5);
+	scene.add(ceiling3);
+	
+	var ceiling4 = new THREE.Mesh(new THREE.BoxGeometry(scale * 13.1,scale * 0.1,scale * 0.1),new THREE.MeshPhongMaterial({color:'white'}));
+	ceiling4.position.set(0,scale * 5.5,-scale * 5);
+	scene.add(ceiling4);
+	
+	var ceiling5 = new THREE.Mesh(new THREE.BoxGeometry(scale * 13.1,scale * 0.1,scale * 0.1),new THREE.MeshPhongMaterial({color:'white'}));
+	ceiling5.position.set(0,scale * 5.5,0);
+	scene.add(ceiling5);
+	
+	var ceiling5 = new THREE.Mesh(new THREE.BoxGeometry(scale * 4,scale * 0.1,scale * 0.1),new THREE.MeshPhongMaterial({color:'white'}));
+	ceiling5.position.set(0,scale * 5.5,0);
+	ceiling5.rotation.set(0,Math.PI/2,0);
+	scene.add(ceiling5);
+	
+	var lightBox = new THREE.Mesh(new THREE.BoxGeometry(scale * 0.15,scale * 0.1,scale * 0.15),new THREE.MeshBasicMaterial({color:'white'}));
+	lightBox.position.set(-scale*6.5,scale * 5.4,scale * 1.5);
+	scene.add(lightBox);
+	
+	var lightBox2 = new THREE.Mesh(new THREE.BoxGeometry(scale * 0.15,scale * 0.1,scale * 0.15),new THREE.MeshBasicMaterial({color:'white'}));
+	lightBox2.position.set(-scale*6.5,scale * 5.4,-scale * 1.5);
+	scene.add(lightBox2);
+	
+	var lightBox3 = new THREE.Mesh(new THREE.BoxGeometry(scale * 0.15,scale * 0.1,scale * 0.15),new THREE.MeshBasicMaterial({color:'white'}));
+	lightBox3.position.set(-scale*6.5,scale * 5.4,0);
+	scene.add(lightBox3);
+	
+	var lightBox4 = new THREE.Mesh(new THREE.BoxGeometry(scale * 0.15,scale * 0.1,scale * 0.15),new THREE.MeshBasicMaterial({color:'white'}));
+	lightBox4.position.set(scale*6.5,scale * 5.4,scale * 1.5);
+	scene.add(lightBox4);
+	
+	var lightBox5 = new THREE.Mesh(new THREE.BoxGeometry(scale * 0.15,scale * 0.1,scale * 0.15),new THREE.MeshBasicMaterial({color:'white'}));
+	lightBox5.position.set(scale*6.5,scale * 5.4,-scale * 1.5);
+	scene.add(lightBox5);
+	
+	var lightBox6 = new THREE.Mesh(new THREE.BoxGeometry(scale * 0.15,scale * 0.1,scale * 0.15),new THREE.MeshBasicMaterial({color:'white'}));
+	lightBox6.position.set(scale*6.5,scale * 5.4,0);
+	scene.add(lightBox6);
+	
+	var lightBox7 = new THREE.Mesh(new THREE.BoxGeometry(scale * 0.15,scale * 0.1,scale * 0.15),new THREE.MeshBasicMaterial({color:'white'}));
+	lightBox7.position.set(0,scale * 5.4,scale * 5);
+	scene.add(lightBox7);
+	
+	var lightBox8 = new THREE.Mesh(new THREE.BoxGeometry(scale * 0.15,scale * 0.1,scale * 0.15),new THREE.MeshBasicMaterial({color:'white'}));
+	lightBox8.position.set(-scale*3,scale * 5.4,scale * 5);
+	scene.add(lightBox8);
+	
+	var lightBox9 = new THREE.Mesh(new THREE.BoxGeometry(scale * 0.15,scale * 0.1,scale * 0.15),new THREE.MeshBasicMaterial({color:'white'}));
+	lightBox9.position.set(scale*3,scale * 5.4,scale * 5);
+	scene.add(lightBox9);
+	
+	var lightBox10 = new THREE.Mesh(new THREE.BoxGeometry(scale * 0.15,scale * 0.1,scale * 0.15),new THREE.MeshBasicMaterial({color:'white'}));
+	lightBox10.position.set(-scale*2.5,scale * 5.4,0);
+	scene.add(lightBox10);
+	
+	var lightBox11 = new THREE.Mesh(new THREE.BoxGeometry(scale * 0.15,scale * 0.1,scale * 0.15),new THREE.MeshBasicMaterial({color:'white'}));
+	lightBox11.position.set(scale*2.5,scale * 5.4,0);
+	scene.add(lightBox11);
+	
+	var lightBox12 = new THREE.Mesh(new THREE.BoxGeometry(scale * 0.15,scale * 0.1,scale * 0.15),new THREE.MeshBasicMaterial({color:'white'}));
+	lightBox12.position.set(0,scale * 5.4,scale *1.6);
+	scene.add(lightBox12);
+	
+	var innerlightBox = new THREE.Mesh(new THREE.BoxGeometry(scale * 0.15,scale * 0.3,scale * 0.15),new THREE.MeshBasicMaterial({color:'white'}));
+	innerlightBox.position.set(0,scale * 5.3,-scale *1.6);
+	scene.add(innerlightBox);
+	
+	var innerlightBox2 = new THREE.Mesh(new THREE.BoxGeometry(scale * 0.15,scale * 0.3,scale * 0.15),new THREE.MeshBasicMaterial({color:'white'}));
+	innerlightBox2.position.set(scale*3,scale * 5.3,-scale * 5);
+	scene.add(innerlightBox2);
+	
+	var innerlightBox3 = new THREE.Mesh(new THREE.BoxGeometry(scale * 0.15,scale * 0.3,scale * 0.15),new THREE.MeshBasicMaterial({color:'white'}));
+	innerlightBox3.position.set(-scale*3,scale * 5.3,-scale * 5);
+	scene.add(innerlightBox3);
+	
+	var innerlightBox4 = new THREE.Mesh(new THREE.BoxGeometry(scale * 0.15,scale * 0.3,scale * 0.15),new THREE.MeshBasicMaterial({color:'white'}));
+	innerlightBox4.position.set(-scale*6.5,scale * 5.3,scale * 5);
+	scene.add(innerlightBox4);
+	
+	var innerlightBox5 = new THREE.Mesh(new THREE.BoxGeometry(scale * 0.15,scale * 0.3,scale * 0.15),new THREE.MeshBasicMaterial({color:'white'}));
+	innerlightBox5.position.set(scale*6.5,scale * 5.3,scale * 5);
+	scene.add(innerlightBox5);
+	
+	
+	
+}
+ 
+function buildWall()
+{
+	var wall = new THREE.Mesh(new THREE.BoxGeometry(scale * 16,scale * 4,scale * 0.25),new THREE.MeshPhongMaterial({color:'white'}));
+	wall.position.set(0,scale * 2,scale*6.5);
+	scene.add(wall);
+	
+	var wall = new THREE.Mesh(new THREE.BoxGeometry(scale * 13,scale * 4,scale * 0.25),new THREE.MeshPhongMaterial({color:'white'}));
+	wall.position.set(scale*8,scale * 2,0);
+	wall.rotation.set(0,Math.PI/2,0);
+	scene.add(wall);
+	
+	var wall = new THREE.Mesh(new THREE.BoxGeometry(scale * 13,scale * 4,scale * 0.25),new THREE.MeshPhongMaterial({color:'white'}));
+	wall.position.set(-scale*8,scale * 2,0);
+	wall.rotation.set(0,Math.PI/2,0);
+	scene.add(wall);
+	
+	var wall = new THREE.Mesh(new THREE.BoxGeometry(scale * 7,scale * 4,scale * 0.25),new THREE.MeshPhongMaterial({color:'white'}));
+	wall.position.set(scale*4.6,scale * 2,-scale*6.5);
+	scene.add(wall);
+	
+	var wall = new THREE.Mesh(new THREE.BoxGeometry(scale * 7,scale * 4,scale * 0.25),new THREE.MeshPhongMaterial({color:'white'}));
+	wall.position.set(-scale*4.6,scale * 2,-scale*6.5);
+	scene.add(wall);
+	
+	var wall = new THREE.Mesh(new THREE.BoxGeometry(scale * 5,scale * 4,scale * 0.25),new THREE.MeshPhongMaterial({color:'white'}));
+	wall.position.set(0,scale * 2,-scale*3);
+	scene.add(wall);
+	
+	var wall = new THREE.Mesh(new THREE.BoxGeometry(scale * 5,scale * 4,scale * 0.25),new THREE.MeshPhongMaterial({color:'white'}));
+	wall.position.set(0,scale * 2,scale*3);
+	scene.add(wall);
+	
+	var wall = new THREE.Mesh(new THREE.BoxGeometry(scale * 5,scale * 4,scale * 0.25),new THREE.MeshPhongMaterial({color:'white'}));
+	wall.position.set(-scale*5,scale * 2,0);
+	wall.rotation.set(0,Math.PI/2,0);
+	scene.add(wall);
+	
+	var wall = new THREE.Mesh(new THREE.BoxGeometry(scale * 5,scale * 4,scale * 0.25),new THREE.MeshPhongMaterial({color:'white'}));
+	wall.position.set(scale*5,scale * 2,0);
+	wall.rotation.set(0,Math.PI/2,0);
+	scene.add(wall);
+	
+	var light1 = new THREE.PointLight( 0xffffff, 1, 800 );
+	light1.position.set(550, scale*5, 650);
+	scene.add(light1);
+	
+	var light2 = new THREE.PointLight( 0xffffff, 1, 800 );
+	light2.position.set(-550, scale*5, 650);
+	scene.add(light2);
+}
+
+
+function buildFloor(){
+	let texture = new THREE.TextureLoader().load("https://i.imgur.com/Tjj77Uv.jpg");
+	texture.wrapS = THREE.RepeatWrapping;
+	texture.wrapT = THREE.RepeatWrapping;
+	texture.repeat.set (16, 13);
+	let material = new THREE.MeshPhongMaterial({map:texture});
+	let floor = new THREE.Mesh(new THREE.PlaneGeometry(1600,1300),material)
+	floor.rotation.x = -Math.PI/2
+	scene.add(floor);
+}
+
+function buildchair()
+{
+	var boxTop = new THREE.Mesh(new THREE.BoxGeometry(scale * 2, scale * 0.25, scale * 0.5),new THREE.MeshPhongMaterial({color:'brown'}));
+	var boxLeg1 = new THREE.Mesh(new THREE.BoxGeometry(scale * 0.125, scale * 0.25, scale * 0.5),new THREE.MeshPhongMaterial({color:'brown'}));
+	var boxLeg2 = new THREE.Mesh(new THREE.BoxGeometry(scale * 0.125, scale * 0.25, scale * 0.5),new THREE.MeshPhongMaterial({color:'brown'}));
+	boxTop.position.set(0,scale * 0.375, -237);
+	boxLeg1.position.set(-scale + scale * 0.0625, scale * 0.125, -237);
+	boxLeg2.position.set(scale - scale * 0.0625, scale * 0.125, -237);
+	scene.add(boxTop,boxLeg1,boxLeg2);
+	var light1 = new THREE.PointLight( 0xffffff, 1, 800 );
+	light1.position.set(0, scale*5, -227);
+	scene.add(light1);
+	
+	var box2Top = new THREE.Mesh(new THREE.BoxGeometry(scale * 2, scale * 0.25, scale * 0.5),new THREE.MeshPhongMaterial({color:'brown'}));
+	var box2Leg1 = new THREE.Mesh(new THREE.BoxGeometry(scale * 0.125, scale * 0.25, scale * 0.5),new THREE.MeshPhongMaterial({color:'brown'}));
+	var box2Leg2 = new THREE.Mesh(new THREE.BoxGeometry(scale * 0.125, scale * 0.25, scale * 0.5),new THREE.MeshPhongMaterial({color:'brown'}));
+	box2Top.position.set(350,scale * 0.375, -587);
+	box2Leg1.position.set(-scale + scale * 0.0625+350, scale * 0.125, -587);
+	box2Leg2.position.set(scale - scale * 0.0625+350, scale * 0.125, -587);
+	scene.add(box2Top,box2Leg1,box2Leg2);
+	var light2 = new THREE.PointLight( 0xffffff, 1, 800 );
+	light2.position.set(350, scale*5, -577);
+	scene.add(light2);
+	
+	var box3Top = new THREE.Mesh(new THREE.BoxGeometry(scale * 2, scale * 0.25, scale * 0.5),new THREE.MeshPhongMaterial({color:'brown'}));
+	var box3Leg1 = new THREE.Mesh(new THREE.BoxGeometry(scale * 0.125, scale * 0.25, scale * 0.5),new THREE.MeshPhongMaterial({color:'brown'}));
+	var box3Leg2 = new THREE.Mesh(new THREE.BoxGeometry(scale * 0.125, scale * 0.25, scale * 0.5),new THREE.MeshPhongMaterial({color:'brown'}));
+	box3Top.position.set(-350,scale * 0.375, -587);
+	box3Leg1.position.set(-scale + scale * 0.0625-350, scale * 0.125, -587);
+	box3Leg2.position.set(scale - scale * 0.0625-350, scale * 0.125, -587);
+	scene.add(box3Top,box3Leg1,box3Leg2);
+	var light3 = new THREE.PointLight( 0xffffff, 1, 800 );
+	light3.position.set(-350, scale*5, -577);
+	scene.add(light3);
+}
+
+function painting()
+{
+	let loader = new THREE.TextureLoader();	
+	let paint1Texture = loader.load('https://i.imgur.com/hK9q1ne.jpeg');
+	let paint1= new THREE.Mesh(new THREE.PlaneGeometry(117,144),new THREE.MeshPhongMaterial({map:paint1Texture}))
+	paint1.position.set(-787,scale * 2.5,scale * 1.5);
+	paint1.rotation.set(0,Math.PI/2,0);
+	scene.add(paint1);
+	var spotLight = new THREE.SpotLight(0xffffff, 1, 1000, Math.PI / 6, 0.974);
+	spotLight.position.set(-500, scale * 5, scale * 1.5);
+	spotLight.target = paint1;
+	group.add(spotLight);
+	//scene.add(spotLight);
+	
+	let paint2= new THREE.Mesh(new THREE.PlaneGeometry(117,144),new THREE.MeshPhongMaterial({map:paint1Texture}))
+	paint2.position.set(-787,scale * 2.5,-scale * 1.5);
+	paint2.rotation.set(0,Math.PI/2,0);
+	scene.add(paint2);
+	var spotLight2 = new THREE.SpotLight(0xffffff, 1, 1000, Math.PI / 6, 0.974);
+	spotLight2.position.set(-500, scale * 5, -scale * 1.5);
+	spotLight2.target = paint2;
+	group.add(spotLight2);
+	//scene.add(spotLight2);
+	
+	let paint3= new THREE.Mesh(new THREE.PlaneGeometry(117,144),new THREE.MeshPhongMaterial({map:paint1Texture}))
+	paint3.position.set(-513,scale * 2.5,0);
+	paint3.rotation.set(0,-Math.PI/2,0);
+	scene.add(paint3);
+	var spotLight3 = new THREE.SpotLight(0xffffff, 1, 1000, Math.PI / 6, 0.974);
+	spotLight3.position.set(-800, scale * 5, 0);
+	spotLight3.target = paint3;
+	group.add(spotLight3);
+	//scene.add(spotLight3);
+	
+	let paint4= new THREE.Mesh(new THREE.PlaneGeometry(117,144),new THREE.MeshPhongMaterial({map:paint1Texture}))
+	paint4.position.set(787,scale * 2.5,scale * 1.5);
+	paint4.rotation.set(0,-Math.PI/2,0);
+	scene.add(paint4);
+	var spotLight4 = new THREE.SpotLight(0xffffff, 1, 1000, Math.PI / 6, 0.974);
+	spotLight4.position.set(500, scale * 5, scale * 1.5);
+	spotLight4.target = paint4;
+	group.add(spotLight4);
+	//scene.add(spotLight4);
+	
+	let paint5= new THREE.Mesh(new THREE.PlaneGeometry(117,144),new THREE.MeshPhongMaterial({map:paint1Texture}))
+	paint5.position.set(787,scale * 2.5,-scale * 1.5);
+	paint5.rotation.set(0,-Math.PI/2,0);
+	scene.add(paint5);
+	var spotLight5 = new THREE.SpotLight(0xffffff, 1, 1000, Math.PI / 6, 0.974);
+	spotLight5.position.set(500, scale * 5, -scale * 1.5);
+	spotLight5.target = paint5;
+	group.add(spotLight5);
+	//scene.add(spotLight5);
+	
+	let paint6= new THREE.Mesh(new THREE.PlaneGeometry(117,144),new THREE.MeshPhongMaterial({map:paint1Texture}))
+	paint6.position.set(513,scale * 2.5,0);
+	paint6.rotation.set(0,Math.PI/2,0);
+	scene.add(paint6);
+	var spotLight6 = new THREE.SpotLight(0xffffff, 1, 1000, Math.PI / 6, 0.974);
+	spotLight6.position.set(800, scale * 5, 0);
+	spotLight6.target = paint6;
+	group.add(spotLight6);
+	//scene.add(spotLight6);
+	
+	let paint7= new THREE.Mesh(new THREE.PlaneGeometry(117,144),new THREE.MeshPhongMaterial({map:paint1Texture}))
+	paint7.position.set(300,scale * 2.5,637);
+	paint7.rotation.set(0,-Math.PI,0);
+	scene.add(paint7);
+	var spotLight7 = new THREE.SpotLight(0xffffff, 1, 1000, Math.PI / 6, 0.974);
+	spotLight7.position.set(300, scale * 5, 300);
+	spotLight7.target = paint7;
+	group.add(spotLight7);
+	//scene.add(spotLight7);
+	
+	let paint8= new THREE.Mesh(new THREE.PlaneGeometry(117,144),new THREE.MeshPhongMaterial({map:paint1Texture}))
+	paint8.position.set(-300,scale * 2.5,637);
+	paint8.rotation.set(0,-Math.PI,0);
+	scene.add(paint8);
+	var spotLight8 = new THREE.SpotLight(0xffffff, 1, 1000, Math.PI / 6, 0.974);
+	spotLight8.position.set(-300, scale * 5, 300);
+	spotLight8.target = paint8;
+	group.add(spotLight8);
+	//scene.add(spotLight8);
+	
+	let paint9= new THREE.Mesh(new THREE.PlaneGeometry(117,144),new THREE.MeshPhongMaterial({map:paint1Texture}))
+	paint9.position.set(487,scale * 2.5,0);
+	paint9.rotation.set(0,-Math.PI/2,0);
+	scene.add(paint9);
+	var spotLight9 = new THREE.SpotLight(0xffffff, 1, 1000, Math.PI / 6, 0.974);
+	spotLight9.position.set(0, scale * 5, 0);
+	spotLight9.target = paint9;
+	group.add(spotLight9);
+	//scene.add(spotLight9);
+	
+	let paint10= new THREE.Mesh(new THREE.PlaneGeometry(117,144),new THREE.MeshPhongMaterial({map:paint1Texture}))
+	paint10.position.set(-487,scale * 2.5,0);
+	paint10.rotation.set(0,Math.PI/2,0);
+	scene.add(paint10);
+	var spotLight10 = new THREE.SpotLight(0xffffff, 1, 1000, Math.PI / 6, 0.974);
+	spotLight10.position.set(0, scale * 5, 0);
+	spotLight10.target = paint10;
+	group.add(spotLight10);
+	//scene.add(spotLight10);
+	
+	let paint11= new THREE.Mesh(new THREE.PlaneGeometry(117,144),new THREE.MeshPhongMaterial({map:paint1Texture}))
+	paint11.position.set(0,scale * 2.5,287);
+	paint11.rotation.set(0,-Math.PI,0);
+	scene.add(paint11);
+	var spotLight11 = new THREE.SpotLight(0xffffff, 1, 1000, Math.PI / 6, 0.974);
+	spotLight11.position.set(0, scale * 5, 0);
+	spotLight11.target = paint11;
+	group.add(spotLight11);
+	//scene.add(spotLight11);
+	
+	let paint12= new THREE.Mesh(new THREE.PlaneGeometry(117,144),new THREE.MeshPhongMaterial({map:paint1Texture}))
+	paint12.position.set(0,scale * 2.5,313);
+	scene.add(paint12);
+	var spotLight12 = new THREE.SpotLight(0xffffff, 1, 1000, Math.PI / 6, 0.974);
+	spotLight12.position.set(0, scale * 5, 413);
+	spotLight12.target = paint12;
+	group.add(spotLight12);
+	//scene.add(spotLight12);
+	
+	scene.add(group);
+    group.children.forEach(function(b){b.power=5});
+}
+
+function animate() 
+{
+  if(index==1&&temp==0)
+  {
+	temp++;
+    camera.position.x = 0;
+	camera.position.z = -900;
+    camera.position.y = 1500;
+  }
+  else if(index==2&&temp==0)
+  {
+	temp++;
+    camera.position.x = 0;
+	camera.position.z = -237;
+    camera.position.y = 700;
+  }
+  else if(index==0&&temp==0)
+  {
+	temp++;
+    camera.position.x = 0;
+	camera.position.z = 750;
+    camera.position.y = 2000;
+  }
+  requestAnimationFrame(animate);
+  renderer.render(scene, camera);
+}
+
+</script>
+</body>
+</html>
